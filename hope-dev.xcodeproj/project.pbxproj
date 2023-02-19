@@ -1,0 +1,441 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2AE9E3D729A198BE00D43991 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9E3D629A198BE00D43991 /* AppDelegate.swift */; };
+		2AE9E3D929A198BE00D43991 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9E3D829A198BE00D43991 /* SceneDelegate.swift */; };
+		2AE9E3DB29A198BE00D43991 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9E3DA29A198BE00D43991 /* ViewController.swift */; };
+		2AE9E3DE29A198BE00D43991 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AE9E3DC29A198BE00D43991 /* Main.storyboard */; };
+		2AE9E3E029A198BF00D43991 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE9E3DF29A198BF00D43991 /* Assets.xcassets */; };
+		2AE9E3E329A198BF00D43991 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AE9E3E129A198BF00D43991 /* LaunchScreen.storyboard */; };
+		2AE9E3EB29A1A0E900D43991 /* MicrosoftCognitiveServicesSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AE9E3EA29A1A0E900D43991 /* MicrosoftCognitiveServicesSpeech.xcframework */; };
+		F9AF420AD8FD1DD766251784 /* Pods_hope_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9214CC947DB46818B3A70DE4 /* Pods_hope_dev.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0B913F3E5C8CF0EFF5FC920A /* Pods-hope-dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hope-dev.debug.xcconfig"; path = "Target Support Files/Pods-hope-dev/Pods-hope-dev.debug.xcconfig"; sourceTree = "<group>"; };
+		2AE9E3D329A198BE00D43991 /* hope-dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "hope-dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2AE9E3D629A198BE00D43991 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2AE9E3D829A198BE00D43991 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		2AE9E3DA29A198BE00D43991 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2AE9E3DD29A198BE00D43991 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2AE9E3DF29A198BF00D43991 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2AE9E3E229A198BF00D43991 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2AE9E3E429A198BF00D43991 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2AE9E3EA29A1A0E900D43991 /* MicrosoftCognitiveServicesSpeech.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MicrosoftCognitiveServicesSpeech.xcframework; path = "Pods/MicrosoftCognitiveServicesSpeech-iOS/MicrosoftCognitiveServicesSpeech.xcframework"; sourceTree = "<group>"; };
+		2FA2D5FAF4620E0913611E24 /* Pods-hope-dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hope-dev.release.xcconfig"; path = "Target Support Files/Pods-hope-dev/Pods-hope-dev.release.xcconfig"; sourceTree = "<group>"; };
+		9214CC947DB46818B3A70DE4 /* Pods_hope_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hope_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2AE9E3D029A198BE00D43991 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F9AF420AD8FD1DD766251784 /* Pods_hope_dev.framework in Frameworks */,
+				2AE9E3EB29A1A0E900D43991 /* MicrosoftCognitiveServicesSpeech.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2AE9E3CA29A198BE00D43991 = {
+			isa = PBXGroup;
+			children = (
+				2AE9E3D529A198BE00D43991 /* hope-dev */,
+				2AE9E3D429A198BE00D43991 /* Products */,
+				DE2F350F3059FE26EA7D8C13 /* Pods */,
+				628B905F6F932F9E28E17C2F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		2AE9E3D429A198BE00D43991 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2AE9E3D329A198BE00D43991 /* hope-dev.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2AE9E3D529A198BE00D43991 /* hope-dev */ = {
+			isa = PBXGroup;
+			children = (
+				2AE9E3D629A198BE00D43991 /* AppDelegate.swift */,
+				2AE9E3D829A198BE00D43991 /* SceneDelegate.swift */,
+				2AE9E3DA29A198BE00D43991 /* ViewController.swift */,
+				2AE9E3DC29A198BE00D43991 /* Main.storyboard */,
+				2AE9E3DF29A198BF00D43991 /* Assets.xcassets */,
+				2AE9E3E129A198BF00D43991 /* LaunchScreen.storyboard */,
+				2AE9E3E429A198BF00D43991 /* Info.plist */,
+			);
+			path = "hope-dev";
+			sourceTree = "<group>";
+		};
+		628B905F6F932F9E28E17C2F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2AE9E3EA29A1A0E900D43991 /* MicrosoftCognitiveServicesSpeech.xcframework */,
+				9214CC947DB46818B3A70DE4 /* Pods_hope_dev.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DE2F350F3059FE26EA7D8C13 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0B913F3E5C8CF0EFF5FC920A /* Pods-hope-dev.debug.xcconfig */,
+				2FA2D5FAF4620E0913611E24 /* Pods-hope-dev.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2AE9E3D229A198BE00D43991 /* hope-dev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2AE9E3E729A198BF00D43991 /* Build configuration list for PBXNativeTarget "hope-dev" */;
+			buildPhases = (
+				7E14997FB83D518E7D908184 /* [CP] Check Pods Manifest.lock */,
+				2AE9E3CF29A198BE00D43991 /* Sources */,
+				2AE9E3D029A198BE00D43991 /* Frameworks */,
+				2AE9E3D129A198BE00D43991 /* Resources */,
+				AB29434DB08A7D6775F3A3C0 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "hope-dev";
+			productName = "hope-dev";
+			productReference = 2AE9E3D329A198BE00D43991 /* hope-dev.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2AE9E3CB29A198BE00D43991 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					2AE9E3D229A198BE00D43991 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+				};
+			};
+			buildConfigurationList = 2AE9E3CE29A198BE00D43991 /* Build configuration list for PBXProject "hope-dev" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2AE9E3CA29A198BE00D43991;
+			productRefGroup = 2AE9E3D429A198BE00D43991 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2AE9E3D229A198BE00D43991 /* hope-dev */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2AE9E3D129A198BE00D43991 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AE9E3E329A198BF00D43991 /* LaunchScreen.storyboard in Resources */,
+				2AE9E3E029A198BF00D43991 /* Assets.xcassets in Resources */,
+				2AE9E3DE29A198BE00D43991 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7E14997FB83D518E7D908184 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-hope-dev-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AB29434DB08A7D6775F3A3C0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-hope-dev/Pods-hope-dev-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-hope-dev/Pods-hope-dev-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-hope-dev/Pods-hope-dev-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2AE9E3CF29A198BE00D43991 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AE9E3DB29A198BE00D43991 /* ViewController.swift in Sources */,
+				2AE9E3D729A198BE00D43991 /* AppDelegate.swift in Sources */,
+				2AE9E3D929A198BE00D43991 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2AE9E3DC29A198BE00D43991 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2AE9E3DD29A198BE00D43991 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2AE9E3E129A198BF00D43991 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2AE9E3E229A198BF00D43991 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2AE9E3E529A198BF00D43991 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2AE9E3E629A198BF00D43991 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2AE9E3E829A198BF00D43991 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B913F3E5C8CF0EFF5FC920A /* Pods-hope-dev.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UR848N85AW;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "hope-dev/Info.plist";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "lifez-data-ai.hope-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2AE9E3E929A198BF00D43991 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2FA2D5FAF4620E0913611E24 /* Pods-hope-dev.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UR848N85AW;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "hope-dev/Info.plist";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "lifez-data-ai.hope-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2AE9E3CE29A198BE00D43991 /* Build configuration list for PBXProject "hope-dev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2AE9E3E529A198BF00D43991 /* Debug */,
+				2AE9E3E629A198BF00D43991 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2AE9E3E729A198BF00D43991 /* Build configuration list for PBXNativeTarget "hope-dev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2AE9E3E829A198BF00D43991 /* Debug */,
+				2AE9E3E929A198BF00D43991 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2AE9E3CB29A198BE00D43991 /* Project object */;
+}
