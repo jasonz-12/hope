@@ -18,6 +18,8 @@ class ViewController: UIViewController, UITableViewDataSource {
     var sub: String!
     var region: String!
     var chatPrompt: String!
+    var leadingConstraint: NSLayoutConstraint!
+    var trailingConstraint: NSLayoutConstraint!
     
     var audioPlayer: AVAudioPlayer?
     var messages: [[String: Any]] = []
@@ -37,7 +39,6 @@ class ViewController: UIViewController, UITableViewDataSource {
         // UI Stuff
         msgTable.dataSource = self
         msgTable.register(MessageCell.self, forCellReuseIdentifier: "MessageCell")
- 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -49,17 +50,30 @@ class ViewController: UIViewController, UITableViewDataSource {
         let cell = msgTable.dequeueReusableCell(withIdentifier: "MessageCell", for: indexPath) as! MessageCell
         
         cell.messageLabel.text = message["text"] as? String
-        cell.timestampLabel.text = message["timestamp"] as? String
+        cell.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
+    
         
+        // Adjust color
         if message["sender"] as? String == "User" {
-            cell.backgroundColor = UIColor.systemBlue
             cell.messageLabel.textColor =  UIColor.white
+            cell.messageBackground.backgroundColor = UIColor.systemBlue
+            cell.right_ic_trailingConstraint.isActive = true
+            cell.right_mb_trailingConstraint.isActive = true
+            cell.left_ic_leadingConstraint.isActive = false
+            cell.left_mb_trailingConstraint.isActive = false
         } else {
-            cell.backgroundColor = UIColor.systemGray5
             cell.messageLabel.textColor = UIColor.black
+            cell.messageBackground.backgroundColor = UIColor.systemGray5
+            cell.left_ic_leadingConstraint.isActive = true
+            cell.left_mb_trailingConstraint.isActive = true
+            cell.right_ic_trailingConstraint.isActive = false
+            cell.right_mb_trailingConstraint.isActive = false
         }
-        
         return cell
+    }
+
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
     
     // MARK: send messages
@@ -108,7 +122,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         let result = try! reco.recognizeOnce()
         print("recognition result: \(result.text ?? "(no result)")")
 //        self.updateLabel(text: result.text, color: .black)
-        self.sendMessage(sender: "user", contents: result.text ?? "(no result)")
+        self.sendMessage(sender: "User", contents: result.text ?? "(no result)")
         
         // Call OpenAI API to generate Response
         self.getOpenAIResult(from: result.text ?? "") { response in
@@ -215,54 +229,81 @@ extension Date {
 
 class MessageCell: UITableViewCell {
     
-    let messageLabel = UILabel()
-    let timestampLabel = UILabel()
-    let bubbleImageView = UIImageView()
+    var right_mb_trailingConstraint: NSLayoutConstraint!
+    var right_ic_trailingConstraint: NSLayoutConstraint!
+    var left_ic_leadingConstraint: NSLayoutConstraint!
+    var left_mb_trailingConstraint: NSLayoutConstraint!
     
-    var leadingConstraint: NSLayoutConstraint!
-    var trailingConstraint: NSLayoutConstraint!
+    lazy var iconImageView: UIImageView = {
+        let imageView = UIImageView()
+        //        let icon = UIImage(named: "icons8-Sheep on Bike")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .clear
+        imageView.layer.cornerRadius = 40 // 25
+        imageView.contentMode = .scaleAspectFit
+        //        imageView.image = icon
+        
+        return imageView
+    }()
+    
+    lazy var messageBackground: UIView = {
+        let backgroundView = UIView()
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundView.backgroundColor = UIColor.systemBlue
+        backgroundView.layer.cornerRadius = 10
+        return backgroundView
+    }()
+    
+    lazy var messageLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.backgroundColor = .clear
+        label.textColor = .white
+        
+        return label
+    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(messageLabel)
-        contentView.addSubview(timestampLabel)
-        contentView.addSubview(bubbleImageView)
-        
-        bubbleImageView.contentMode = .scaleToFill
-        bubbleImageView.tintColor = UIColor.systemBlue
+        layoutViews()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+        layoutViews()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        messageLabel.frame = CGRect(x: 16, y: 0, width: contentView.frame.width - 32, height: contentView.frame.height - 16)
-        timestampLabel.frame = CGRect(x: contentView.frame.width - 100, y: contentView.frame.height - 16, width: 84, height: 16)
+    func layoutViews() {
+        contentView.addSubview(iconImageView)
+        contentView.addSubview(messageBackground)
+        messageBackground.addSubview(messageLabel)
         
-        if leadingConstraint == nil {
-            leadingConstraint = bubbleImageView.leadingAnchor.constraint(equalTo: messageLabel.leadingAnchor, constant: -8)
-        }
+        left_ic_leadingConstraint = iconImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -60)
+        left_mb_trailingConstraint = messageBackground.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -70)
         
-        if trailingConstraint == nil {
-            trailingConstraint = bubbleImageView.trailingAnchor.constraint(equalTo: messageLabel.trailingAnchor, constant: 8)
-        }
+        right_ic_trailingConstraint = iconImageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8) // -8
+        right_mb_trailingConstraint = messageBackground.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8) //-8
         
-        bubbleImageView.frame = CGRect(x: messageLabel.frame.minX - 12, y: messageLabel.frame.minY - 8, width: messageLabel.frame.width + 24, height: messageLabel.frame.height + 16)
-    }
-    
-    func setAlignment(sender: String) {
-        if sender == "User" {
-            leadingConstraint.isActive = true
-            trailingConstraint.isActive = false
-            bubbleImageView.tintColor = UIColor.systemBlue
-        } else {
-            leadingConstraint.isActive = false
-            trailingConstraint.isActive = true
-            bubbleImageView.tintColor = UIColor.systemGray5
-        }
+        NSLayoutConstraint.activate([
+            iconImageView.widthAnchor.constraint(equalToConstant: 50),
+            iconImageView.heightAnchor.constraint(equalTo: iconImageView.widthAnchor),
+            iconImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            iconImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: 40),
+//            left_ic_leadingConstraint!, // left
+            right_ic_trailingConstraint!, // right
+            
+            messageBackground.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            messageBackground.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
+            messageBackground.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
+            messageBackground.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
+//            left_mb_trailingConstraint!, // left
+            right_mb_trailingConstraint!, // right
+            
+            messageLabel.topAnchor.constraint(equalTo: messageBackground.topAnchor, constant: 5),
+            messageLabel.bottomAnchor.constraint(equalTo: messageBackground.bottomAnchor, constant: -5),
+            messageLabel.leadingAnchor.constraint(equalTo: messageBackground.leadingAnchor, constant: 10),
+            messageLabel.trailingAnchor.constraint(lessThanOrEqualTo: messageBackground.trailingAnchor, constant: -10)
+            ])
     }
 }
-
-
