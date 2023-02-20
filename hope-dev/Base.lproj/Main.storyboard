@@ -28,13 +28,13 @@
                                 <rect key="frame" x="16" y="107" width="361" height="607"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hope" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hgX-gh-EdB">
-                                <rect key="frame" x="171" y="59" width="73" height="24"/>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tbZ-pL-l2k">
+                                <rect key="frame" x="0.0" y="49" width="393" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <items>
+                                    <navigationItem title="Hope" id="pfR-rM-45K"/>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -42,15 +42,16 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Mbb-Yz-2ag" secondAttribute="bottom" constant="34" id="2vZ-fM-qFf"/>
                             <constraint firstItem="Mbb-Yz-2ag" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="690" id="EB6-X3-3Ag"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="QcU-Tq-kEF" secondAttribute="bottom" constant="104" id="IvV-mj-HLu"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="QcU-Tq-kEF" secondAttribute="trailing" constant="16" id="OzP-fJ-5Hd"/>
                             <constraint firstItem="QcU-Tq-kEF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="Y6x-wS-ocG"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Mbb-Yz-2ag" secondAttribute="trailing" constant="108" id="bEP-ZV-Fon"/>
-                            <constraint firstItem="QcU-Tq-kEF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="ijp-xf-0fm"/>
+                            <constraint firstItem="QcU-Tq-kEF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="h20-0A-A4A"/>
                             <constraint firstItem="Mbb-Yz-2ag" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="108" id="k3U-hx-vxL"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="QcU-Tq-kEF" secondAttribute="trailing" constant="16" id="vdE-Mf-Dvn"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="msgTable" destination="QcU-Tq-kEF" id="kkh-jh-EKO"/>
+                        <outlet property="navBar" destination="tbZ-pL-l2k" id="Je4-tD-dsx"/>
                         <outlet property="recordButton" destination="Mbb-Yz-2ag" id="r9v-il-W6O"/>
                     </connections>
                 </viewController>

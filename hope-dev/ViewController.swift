@@ -9,26 +9,24 @@ import UIKit
 import AVFoundation
 import Speech
 import MicrosoftCognitiveServicesSpeech
-import MessageKit
 
-class ViewController: UIViewController, UITableViewDataSource {
+// MARK: View Controller
+class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningDelegate, UINavigationBarDelegate {
 
     var fromMicButton: UIButton!
-    
     var sub: String!
     var region: String!
     var chatPrompt: String!
     var leadingConstraint: NSLayoutConstraint!
     var trailingConstraint: NSLayoutConstraint!
-    
     var audioPlayer: AVAudioPlayer?
     var messages: [[String: Any]] = []
     var history = ""
-    
     var chatHistoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("chat_history.txt")
-
+    
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var msgTable: UITableView!
+    @IBOutlet weak var navBar: UINavigationBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,12 +34,18 @@ class ViewController: UIViewController, UITableViewDataSource {
         // load subscription information
         sub = "289df82ad08e424cbd729c7dd332ddff"
         region = "canadacentral"
-        chatPrompt = "Your name is Hope, you will chat and try your best to answer  kindly in English. You have an MBTI of INTJ.\n"
+        chatPrompt = "Your name is Hope, you will chat and try your best to answer  politely in English.\n"
         
         // UI Stuff
         msgTable.dataSource = self
         msgTable.register(MessageCell.self, forCellReuseIdentifier: "MessageCell")
         msgTable.separatorStyle = .none // Remove the cell separator lines
+        
+        navBar.delegate = self
+    }
+    
+    func position(for bar: UIBarPositioning) -> UIBarPosition {
+        return .topAttached
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,7 +77,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
         return cell
     }
-
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -188,7 +192,7 @@ class ViewController: UIViewController, UITableViewDataSource {
             "model": "text-davinci-003",
             "prompt": chatPrompt+history+"\nUser:"+text+"\nHope:",
             "temperature": 0.2,
-            "max_tokens": 100,
+            "max_tokens": 50,
             "n": 1,
             "stop": ["\n"]
         ]
@@ -314,9 +318,8 @@ class MessageCell: UITableViewCell {
         
         left_ic_leadingConstraint = iconImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -52)
         left_mb_trailingConstraint = messageBackground.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -70)
-        
-        right_ic_trailingConstraint = iconImageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8) // -8
-        right_mb_trailingConstraint = messageBackground.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8) //-8
+        right_ic_trailingConstraint = iconImageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8)
+        right_mb_trailingConstraint = messageBackground.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)
         
         NSLayoutConstraint.activate([
             iconImageView.widthAnchor.constraint(equalToConstant: 50),
