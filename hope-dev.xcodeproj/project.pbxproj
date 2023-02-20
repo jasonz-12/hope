@@ -14,7 +14,6 @@
 		2AE9E3E029A198BF00D43991 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE9E3DF29A198BF00D43991 /* Assets.xcassets */; };
 		2AE9E3E329A198BF00D43991 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AE9E3E129A198BF00D43991 /* LaunchScreen.storyboard */; };
 		2AE9E3EB29A1A0E900D43991 /* MicrosoftCognitiveServicesSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AE9E3EA29A1A0E900D43991 /* MicrosoftCognitiveServicesSpeech.xcframework */; };
-		2AE9E3EF29A2537F00D43991 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9E3EE29A2537F00D43991 /* ChatViewController.swift */; };
 		F9AF420AD8FD1DD766251784 /* Pods_hope_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9214CC947DB46818B3A70DE4 /* Pods_hope_dev.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,7 +28,6 @@
 		2AE9E3E229A198BF00D43991 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2AE9E3E429A198BF00D43991 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2AE9E3EA29A1A0E900D43991 /* MicrosoftCognitiveServicesSpeech.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MicrosoftCognitiveServicesSpeech.xcframework; path = "Pods/MicrosoftCognitiveServicesSpeech-iOS/MicrosoftCognitiveServicesSpeech.xcframework"; sourceTree = "<group>"; };
-		2AE9E3EE29A2537F00D43991 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		2FA2D5FAF4620E0913611E24 /* Pods-hope-dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hope-dev.release.xcconfig"; path = "Target Support Files/Pods-hope-dev/Pods-hope-dev.release.xcconfig"; sourceTree = "<group>"; };
 		9214CC947DB46818B3A70DE4 /* Pods_hope_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hope_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -75,7 +73,6 @@
 				2AE9E3DF29A198BF00D43991 /* Assets.xcassets */,
 				2AE9E3E129A198BF00D43991 /* LaunchScreen.storyboard */,
 				2AE9E3E429A198BF00D43991 /* Info.plist */,
-				2AE9E3EE29A2537F00D43991 /* ChatViewController.swift */,
 			);
 			path = "hope-dev";
 			sourceTree = "<group>";
@@ -215,7 +212,6 @@
 			files = (
 				2AE9E3DB29A198BE00D43991 /* ViewController.swift in Sources */,
 				2AE9E3D729A198BE00D43991 /* AppDelegate.swift in Sources */,
-				2AE9E3EF29A2537F00D43991 /* ChatViewController.swift in Sources */,
 				2AE9E3D929A198BE00D43991 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

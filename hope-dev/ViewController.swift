@@ -23,7 +23,9 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     var audioPlayer: AVAudioPlayer?
     var messages: [[String: Any]] = []
+    var history = ""
     
+    var chatHistoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("chat_history.txt")
 
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var msgTable: UITableView!
@@ -34,11 +36,12 @@ class ViewController: UIViewController, UITableViewDataSource {
         // load subscription information
         sub = "289df82ad08e424cbd729c7dd332ddff"
         region = "canadacentral"
-        chatPrompt = "Your name is Hope, you will talk and chat with the user, which is your friend. Whenever they ask a question, you will try my best to answer them kindly in English. You have an MBTI of INTJ."
+        chatPrompt = "Your name is Hope, you will chat and try your best to answer  kindly in English. You have an MBTI of INTJ.\n"
         
         // UI Stuff
         msgTable.dataSource = self
         msgTable.register(MessageCell.self, forCellReuseIdentifier: "MessageCell")
+        msgTable.separatorStyle = .none // Remove the cell separator lines
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -51,7 +54,6 @@ class ViewController: UIViewController, UITableViewDataSource {
         
         cell.messageLabel.text = message["text"] as? String
         cell.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
-    
         
         // Adjust color
         if message["sender"] as? String == "User" {
@@ -76,7 +78,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         return UITableView.automaticDimension
     }
     
-    // MARK: send messages
+    // MARK: Send messages
     func sendMessage(sender: String, contents: String) {
         let timestamp = Date().iso8601
         
@@ -89,6 +91,20 @@ class ViewController: UIViewController, UITableViewDataSource {
         messages.append(message)
         DispatchQueue.main.async {
             self.msgTable.reloadData()
+        }
+        // Save them
+        saveMessages()
+    }
+    
+    // MARK: Save messages
+    func saveMessages(){
+        // Save the `messages` into a file for session history - locally
+        do {
+            let data = try JSONSerialization.data(withJSONObject: messages, options: [])
+            try data.write(to: chatHistoryURL)
+            print("Messages saved to chatHistory.")
+        } catch {
+            print("Error while saving messages to chatHistory: \(error)")
         }
     }
     
@@ -152,11 +168,26 @@ class ViewController: UIViewController, UITableViewDataSource {
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
+        // Read the history and read {"User": "content", "Hope": "content"} into text files
+        do {
+            let historyData = try Data(contentsOf: chatHistoryURL)
+            let history = try JSONSerialization.jsonObject(with: historyData, options: []) as! [[String: Any]]
+            var historyString = ""
+            for message in history {
+                if let sender = message["sender"] as? String, let content = message["text"] as? String {
+                    historyString += "\n\(sender): \(content)"
+                }
+            }
+            self.history = historyString
+        } catch {
+            print("Error loading chat history.")
+        }
+        
         // Set the request body
         let requestBody: [String: Any] = [
             "model": "text-davinci-003",
-            "prompt": chatPrompt+"Q:"+text+"A:",
-            "temperature": 0.75,
+            "prompt": chatPrompt+history+"\nUser:"+text+"\nHope:",
+            "temperature": 0.2,
             "max_tokens": 100,
             "n": 1,
             "stop": ["\n"]
@@ -233,6 +264,8 @@ class MessageCell: UITableViewCell {
     var right_ic_trailingConstraint: NSLayoutConstraint!
     var left_ic_leadingConstraint: NSLayoutConstraint!
     var left_mb_trailingConstraint: NSLayoutConstraint!
+    var trailingConstraint: NSLayoutConstraint!
+    var leadingConstraint: NSLayoutConstraint!
     
     lazy var iconImageView: UIImageView = {
         let imageView = UIImageView()
@@ -279,7 +312,7 @@ class MessageCell: UITableViewCell {
         contentView.addSubview(messageBackground)
         messageBackground.addSubview(messageLabel)
         
-        left_ic_leadingConstraint = iconImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -60)
+        left_ic_leadingConstraint = iconImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -52)
         left_mb_trailingConstraint = messageBackground.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -70)
         
         right_ic_trailingConstraint = iconImageView.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8) // -8
@@ -303,7 +336,10 @@ class MessageCell: UITableViewCell {
             messageLabel.topAnchor.constraint(equalTo: messageBackground.topAnchor, constant: 5),
             messageLabel.bottomAnchor.constraint(equalTo: messageBackground.bottomAnchor, constant: -5),
             messageLabel.leadingAnchor.constraint(equalTo: messageBackground.leadingAnchor, constant: 10),
-            messageLabel.trailingAnchor.constraint(lessThanOrEqualTo: messageBackground.trailingAnchor, constant: -10)
+            messageLabel.trailingAnchor.constraint(lessThanOrEqualTo: messageBackground.trailingAnchor, constant: -10),
+            
+            // set the preferred max
+            messageLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 250), // or any preferred max width
             ])
     }
 }
