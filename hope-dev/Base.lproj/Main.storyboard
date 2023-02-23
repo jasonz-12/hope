@@ -16,16 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mbb-Yz-2ag">
-                                <rect key="frame" x="108" y="749" width="177" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Ask Hope"/>
-                                <connections>
-                                    <action selector="fromMicButtonClicked" destination="BYZ-38-t0r" eventType="touchUpInside" id="iX7-AP-okL"/>
-                                </connections>
-                            </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="QcU-Tq-kEF">
-                                <rect key="frame" x="16" y="107" width="361" height="607"/>
+                                <rect key="frame" x="5" y="102" width="383" height="612"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tbZ-pL-l2k">
@@ -35,18 +27,28 @@
                                     <navigationItem title="Hope" id="pfR-rM-45K"/>
                                 </items>
                             </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mbb-Yz-2ag">
+                                <rect key="frame" x="96" y="758.33333333333337" width="200" height="35.666666666666629"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Ask Hope">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="18"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="fromMicButtonClicked" destination="BYZ-38-t0r" eventType="touchUpInside" id="iX7-AP-okL"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Mbb-Yz-2ag" secondAttribute="bottom" constant="34" id="2vZ-fM-qFf"/>
-                            <constraint firstItem="Mbb-Yz-2ag" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="690" id="EB6-X3-3Ag"/>
+                            <constraint firstItem="Mbb-Yz-2ag" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="699.33333333333337" id="2mF-Uv-ZAU"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Mbb-Yz-2ag" secondAttribute="bottom" constant="24" id="C8b-v3-5Hw"/>
+                            <constraint firstItem="Mbb-Yz-2ag" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="96" id="COt-sA-qWJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="QcU-Tq-kEF" secondAttribute="bottom" constant="104" id="IvV-mj-HLu"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="QcU-Tq-kEF" secondAttribute="trailing" constant="16" id="OzP-fJ-5Hd"/>
-                            <constraint firstItem="QcU-Tq-kEF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="48" id="Y6x-wS-ocG"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Mbb-Yz-2ag" secondAttribute="trailing" constant="108" id="bEP-ZV-Fon"/>
-                            <constraint firstItem="QcU-Tq-kEF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="h20-0A-A4A"/>
-                            <constraint firstItem="Mbb-Yz-2ag" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="108" id="k3U-hx-vxL"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="QcU-Tq-kEF" secondAttribute="trailing" constant="5" id="OzP-fJ-5Hd"/>
+                            <constraint firstItem="QcU-Tq-kEF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="h20-0A-A4A"/>
+                            <constraint firstItem="QcU-Tq-kEF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="43" id="uyq-do-Vxb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Mbb-Yz-2ag" secondAttribute="trailing" constant="97" id="zQi-8a-4Bg"/>
                         </constraints>
                     </view>
                     <connections>

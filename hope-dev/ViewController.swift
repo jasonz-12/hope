@@ -13,6 +13,9 @@ import MicrosoftCognitiveServicesSpeech
 // MARK: View Controller
 class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningDelegate, UINavigationBarDelegate {
 
+    var recognizer: SPXSpeechRecognizer!
+    var recognizerIsRunning = false
+    
     var fromMicButton: UIButton!
     var sub: String!
     var region: String!
@@ -34,13 +37,21 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         // load subscription information
         sub = "289df82ad08e424cbd729c7dd332ddff"
         region = "canadacentral"
-        chatPrompt = "Your name is Hope, you will chat and try your best to answer  politely in English.\n"
+        chatPrompt = "Your name is Hope, you will chat and try your best to answer politely in English. You will try to provide answers as concisly as possible.\n"
+        
+        // Setup recognizer
+        let speechConfig = try! SPXSpeechConfiguration(subscription: sub, region: region)
+        speechConfig.speechRecognitionLanguage = "en-US"
+        let audioConfig = SPXAudioConfiguration()
+        recognizer = try! SPXSpeechRecognizer(speechConfiguration: speechConfig, audioConfiguration: audioConfig)
         
         // UI Stuff
+        // Message Table View
         msgTable.dataSource = self
         msgTable.register(MessageCell.self, forCellReuseIdentifier: "MessageCell")
         msgTable.separatorStyle = .none // Remove the cell separator lines
         
+        // Navigation Bar
         navBar.delegate = self
     }
     
@@ -63,17 +74,17 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         if message["sender"] as? String == "User" {
             cell.messageLabel.textColor =  UIColor.white
             cell.messageBackground.backgroundColor = UIColor.systemBlue
-            cell.right_ic_trailingConstraint.isActive = true
-            cell.right_mb_trailingConstraint.isActive = true
             cell.left_ic_leadingConstraint.isActive = false
             cell.left_mb_trailingConstraint.isActive = false
+            cell.right_ic_trailingConstraint.isActive = true
+            cell.right_mb_trailingConstraint.isActive = true
         } else {
             cell.messageLabel.textColor = UIColor.black
             cell.messageBackground.backgroundColor = UIColor.systemGray5
-            cell.left_ic_leadingConstraint.isActive = true
-            cell.left_mb_trailingConstraint.isActive = true
             cell.right_ic_trailingConstraint.isActive = false
             cell.right_mb_trailingConstraint.isActive = false
+            cell.left_ic_leadingConstraint.isActive = true
+            cell.left_mb_trailingConstraint.isActive = true
         }
         return cell
     }
@@ -95,6 +106,9 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         messages.append(message)
         DispatchQueue.main.async {
             self.msgTable.reloadData()
+            // Scroll to the last row of the table view
+            let lastRowIndex = IndexPath(row: self.messages.count - 1, section: 0)
+            self.msgTable.scrollToRow(at: lastRowIndex, at: .bottom, animated: true)
         }
         // Save them
         saveMessages()
@@ -121,41 +135,37 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
     
     // MARK: Recognition
     func recognizeFromMic() {
-        var speechConfig: SPXSpeechConfiguration?
+        // Clear the audio session before recognition starts
         do {
-            try speechConfig = SPXSpeechConfiguration(subscription: sub, region: region)
+            try AVAudioSession.sharedInstance().setCategory(.record, mode: .default, options: [])
         } catch {
-            print("error \(error) happened")
-            speechConfig = nil
+            print("Error setting audio session category: \(error)")
         }
-        speechConfig?.speechRecognitionLanguage = "en-US"
+
         
-        let audioConfig = SPXAudioConfiguration()
-        
-        let reco = try! SPXSpeechRecognizer(speechConfiguration: speechConfig!, audioConfiguration: audioConfig)
-        
-        reco.addRecognizingEventHandler() {reco, evt in
+        // Add event handler and start recognition
+        recognizer.addRecognizingEventHandler() { [weak self] recognizer, evt in
             print("intermediate recognition result: \(evt.result.text ?? "(no result)")")
         }
         print("Listening...")
-        
-        let result = try! reco.recognizeOnce()
+
+        let result = try! recognizer.recognizeOnce()
         print("recognition result: \(result.text ?? "(no result)")")
-//        self.updateLabel(text: result.text, color: .black)
         self.sendMessage(sender: "User", contents: result.text ?? "(no result)")
-        
+
         // Call OpenAI API to generate Response
         self.getOpenAIResult(from: result.text ?? "") { response in
             if let response = response {
                 print("OpenAI generated response: \(response)")
-                    self.sendMessage(sender: "Hope", contents: response)
+                self.sendMessage(sender: "Hope", contents: response)
+                // Stop the recognizer after each recognition
+                try? self.recognizer.stopContinuousRecognition()
             } else {
                 print("Error generating response.")
                 self.sendMessage(sender: "Hope", contents: "Error")
             }
         }
     }
-    
     
     // MARK: OpenAI API
     func getOpenAIResult(from text: String, completion: @escaping (String?) -> Void) {
@@ -183,6 +193,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
                 }
             }
             self.history = historyString
+            print("Chat history successfully loaded.")
         } catch {
             print("Error loading chat history.")
         }
@@ -190,15 +201,16 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         // Set the request body
         let requestBody: [String: Any] = [
             "model": "text-davinci-003",
-            "prompt": chatPrompt+history+"\nUser:"+text+"\nHope:",
-            "temperature": 0.2,
-            "max_tokens": 50,
+            "prompt": chatPrompt+"\n"+history+"\nUser:"+text+"\nHope:",
+            "temperature": 0.75,
+            "max_tokens": 100,
             "n": 1,
             "stop": ["\n"]
         ]
         let jsonData = try! JSONSerialization.data(withJSONObject: requestBody, options: [])
         request.httpBody = jsonData
         request.httpMethod = "POST"
+        print("OpenAI API request body built.")
         
         // Send the API request
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -213,7 +225,6 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
                         response_text = text
                         // Pass the response to the completion handler
                         completion(response_text)
-                        
                         // Call textToSpeech
                         self.textToSpeech(inputText: response_text)
                     } else {
@@ -241,8 +252,14 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
             speechConfig = nil
         }
         speechConfig?.speechSynthesisVoiceName = "en-US-JennyNeural"
+        
+        // SpeechSession helps to play the audio via speaker
+        let speechSession = AVAudioSession.sharedInstance()
+        try? speechSession.setCategory(.playback, mode: .default, options: [])
         let synthesizer = try! SPXSpeechSynthesizer(speechConfig!)
-        let result = try! synthesizer.speakText(inputText)
+        // Configure the pitch
+        
+        let result = try! synthesizer.speakText(inputText) // The audio is played from this line
         if result.reason == SPXResultReason.canceled
         {
             let cancellationDetails = try! SPXSpeechSynthesisCancellationDetails(fromCanceledSynthesisResult: result)
@@ -276,7 +293,7 @@ class MessageCell: UITableViewCell {
         //        let icon = UIImage(named: "icons8-Sheep on Bike")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .clear
-        imageView.layer.cornerRadius = 40 // 25
+        imageView.layer.cornerRadius = 30 // 25
         imageView.contentMode = .scaleAspectFit
         //        imageView.image = icon
         
@@ -327,14 +344,14 @@ class MessageCell: UITableViewCell {
             iconImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             iconImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: 40),
 //            left_ic_leadingConstraint!, // left
-            right_ic_trailingConstraint!, // right
+//            right_ic_trailingConstraint!, // right
             
             messageBackground.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             messageBackground.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
             messageBackground.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
             messageBackground.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
 //            left_mb_trailingConstraint!, // left
-            right_mb_trailingConstraint!, // right
+//            right_mb_trailingConstraint!, // right
             
             messageLabel.topAnchor.constraint(equalTo: messageBackground.topAnchor, constant: 5),
             messageLabel.bottomAnchor.constraint(equalTo: messageBackground.bottomAnchor, constant: -5),

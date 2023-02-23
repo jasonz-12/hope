@@ -19,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		0B913F3E5C8CF0EFF5FC920A /* Pods-hope-dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hope-dev.debug.xcconfig"; path = "Target Support Files/Pods-hope-dev/Pods-hope-dev.debug.xcconfig"; sourceTree = "<group>"; };
+		2AB2714C29A70E0700FFFE0F /* hope-dev copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "hope-dev copy-Info.plist"; path = "/Users/tbiytc/Desktop/LifeZ_Data/hope-dev/hope-dev copy-Info.plist"; sourceTree = "<absolute>"; };
 		2AE9E3D329A198BE00D43991 /* hope-dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "hope-dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AE9E3D629A198BE00D43991 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2AE9E3D829A198BE00D43991 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -52,6 +53,7 @@
 				2AE9E3D429A198BE00D43991 /* Products */,
 				DE2F350F3059FE26EA7D8C13 /* Pods */,
 				628B905F6F932F9E28E17C2F /* Frameworks */,
+				2AB2714C29A70E0700FFFE0F /* hope-dev copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -356,13 +358,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0B913F3E5C8CF0EFF5FC920A /* Pods-hope-dev.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Hope1024;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UR848N85AW;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "hope-dev/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Hope;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -387,13 +391,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2FA2D5FAF4620E0913611E24 /* Pods-hope-dev.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Hope1024;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UR848N85AW;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "hope-dev/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Hope;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
