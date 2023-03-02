@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2AE4C18F29A847FA002D94A4 /* LaunchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE4C18E29A847FA002D94A4 /* LaunchPage.swift */; };
 		2AE9E3D729A198BE00D43991 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9E3D629A198BE00D43991 /* AppDelegate.swift */; };
 		2AE9E3D929A198BE00D43991 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9E3D829A198BE00D43991 /* SceneDelegate.swift */; };
 		2AE9E3DB29A198BE00D43991 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9E3DA29A198BE00D43991 /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		0B913F3E5C8CF0EFF5FC920A /* Pods-hope-dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hope-dev.debug.xcconfig"; path = "Target Support Files/Pods-hope-dev/Pods-hope-dev.debug.xcconfig"; sourceTree = "<group>"; };
 		2AB2714C29A70E0700FFFE0F /* hope-dev copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "hope-dev copy-Info.plist"; path = "/Users/tbiytc/Desktop/LifeZ_Data/hope-dev/hope-dev copy-Info.plist"; sourceTree = "<absolute>"; };
+		2AE4C18E29A847FA002D94A4 /* LaunchPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchPage.swift; sourceTree = "<group>"; };
 		2AE9E3D329A198BE00D43991 /* hope-dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "hope-dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AE9E3D629A198BE00D43991 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2AE9E3D829A198BE00D43991 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,10 +73,11 @@
 				2AE9E3D629A198BE00D43991 /* AppDelegate.swift */,
 				2AE9E3D829A198BE00D43991 /* SceneDelegate.swift */,
 				2AE9E3DA29A198BE00D43991 /* ViewController.swift */,
+				2AE4C18E29A847FA002D94A4 /* LaunchPage.swift */,
 				2AE9E3DC29A198BE00D43991 /* Main.storyboard */,
-				2AE9E3DF29A198BF00D43991 /* Assets.xcassets */,
 				2AE9E3E129A198BF00D43991 /* LaunchScreen.storyboard */,
 				2AE9E3E429A198BF00D43991 /* Info.plist */,
+				2AE9E3DF29A198BF00D43991 /* Assets.xcassets */,
 			);
 			path = "hope-dev";
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 				2AE9E3DB29A198BE00D43991 /* ViewController.swift in Sources */,
 				2AE9E3D729A198BE00D43991 /* AppDelegate.swift in Sources */,
 				2AE9E3D929A198BE00D43991 /* SceneDelegate.swift in Sources */,
+				2AE4C18F29A847FA002D94A4 /* LaunchPage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +365,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = Hope1024;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UR848N85AW;
@@ -381,9 +386,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "lifez-data-ai.hope-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -394,6 +403,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = Hope1024;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UR848N85AW;
@@ -414,9 +424,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "lifez-data-ai.hope-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

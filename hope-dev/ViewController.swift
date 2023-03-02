@@ -26,22 +26,41 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
     var messages: [[String: Any]] = []
     var history = ""
     var chatHistoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("chat_history.txt")
+    var selectedLanguage: String!
+    var voiceName: String?
+    var speechStyle: String?
+    var speechPitch: String?
     
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var msgTable: UITableView!
     @IBOutlet weak var navBar: UINavigationBar!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // load subscription information
         sub = "289df82ad08e424cbd729c7dd332ddff"
         region = "canadacentral"
-        chatPrompt = "Your name is Hope, you will chat and try your best to answer politely in English. You will try to provide answers as concisly as possible.\n"
+        
+        // Load the selected language type
+        let selectedLanguage = UserDefaults.standard.string(forKey: "selectedLanguage") ?? "en-US"
+        print(selectedLanguage)
+        if selectedLanguage == "en-US" {
+            voiceName = "en-US-JennyNeural"
+            chatPrompt = "Your name is Hope, your MBTI personality is ENTP. You will be friendly, encourgaing, helpful. You will focus on the user's mental well-being. You will respond in the most concise way possible.\n"
+        } else if selectedLanguage == "zh-CN" {
+            voiceName = "zh-CN-XiaomengNeural"
+            chatPrompt = "你的名字是Hope，你的MBTI人格测试结果是ENTP，你是个北京人。你会非常在意他人的心里感受，并且会站在别人的立场思考。你将会以最精辟的方式来回答。"
+        }
+        let speechStyle = "affectionate"
+        let speechPitch = "5%"
+        print(selectedLanguage)
+        print(voiceName)
+        print(speechStyle)
+        print(speechPitch)
         
         // Setup recognizer
         let speechConfig = try! SPXSpeechConfiguration(subscription: sub, region: region)
-        speechConfig.speechRecognitionLanguage = "en-US"
+        speechConfig.speechRecognitionLanguage = selectedLanguage
         let audioConfig = SPXAudioConfiguration()
         recognizer = try! SPXSpeechRecognizer(speechConfiguration: speechConfig, audioConfiguration: audioConfig)
         
@@ -53,6 +72,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         
         // Navigation Bar
         navBar.delegate = self
+        
     }
     
     func position(for bar: UIBarPositioning) -> UIBarPosition {
@@ -127,11 +147,11 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
     }
     
     // MARK: Actions
-    @IBAction func fromMicButtonClicked() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.recognizeFromMic()
+        @IBAction func fromMicButtonClicked() {
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.recognizeFromMic()
+            }
         }
-    }
     
     // MARK: Recognition
     func recognizeFromMic() {
@@ -141,7 +161,6 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         } catch {
             print("Error setting audio session category: \(error)")
         }
-
         
         // Add event handler and start recognition
         recognizer.addRecognizingEventHandler() { [weak self] recognizer, evt in
@@ -152,6 +171,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         let result = try! recognizer.recognizeOnce()
         print("recognition result: \(result.text ?? "(no result)")")
         self.sendMessage(sender: "User", contents: result.text ?? "(no result)")
+        print("User message sent.")
 
         // Call OpenAI API to generate Response
         self.getOpenAIResult(from: result.text ?? "") { response in
@@ -166,13 +186,14 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
             }
         }
     }
+
     
     // MARK: OpenAI API
     func getOpenAIResult(from text: String, completion: @escaping (String?) -> Void) {
         // Set your API key
         var response_text: String!
         print("Received input \(text).")
-        let apiKey = "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"
+        let apiKey = "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"
         
         // Set the API endpoint URL
         let apiUrl = URL(string: "https://api.openai.com/v1/completions")!
@@ -193,32 +214,43 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
                 }
             }
             self.history = historyString
+            self.chatPrompt += historyString
             print("Chat history successfully loaded.")
         } catch {
             print("Error loading chat history.")
         }
         
-        // Set the request body
+        // Set the request body - controll the length of historical input here
+        let chatPromptLines = self.chatPrompt.components(separatedBy: "\n")
+        let hopeSettings = chatPromptLines[0]
+        let recentLines = Array(chatPromptLines.suffix(5))
+        let recentChatPrompt = ([hopeSettings] + recentLines).joined(separator: "\n")
+        print(recentChatPrompt)
+        
+        // Set the body for request
         let requestBody: [String: Any] = [
             "model": "text-davinci-003",
-            "prompt": chatPrompt+"\n"+history+"\nUser:"+text+"\nHope:",
-            "temperature": 0.75,
-            "max_tokens": 100,
-            "n": 1,
-            "stop": ["\n"]
+            "prompt": recentChatPrompt+"\nUser:" + text + "\nHope:",
+            "temperature": 0.9,
+            "max_tokens": 150,
+            "top_p": 1,
+            "frequency_penalty": 0,
+            "presence_penalty": 0.6,
+            "stop": [" User:", " Hope:"]
         ]
         let jsonData = try! JSONSerialization.data(withJSONObject: requestBody, options: [])
         request.httpBody = jsonData
         request.httpMethod = "POST"
-        print("OpenAI API request body built.")
         
         // Send the API request
+        print("Sending request to OpenAI API...")
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error: \(error)")
                 completion(nil)
             } else if let data = data {
                 do {
+                    print("Response received.")
                     // Parse the response JSON
                     let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                     if let choices = json?["choices"] as? [[String: Any]], let text = choices[0]["text"] as? String {
@@ -251,15 +283,16 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
             print("Error \(error) happened.")
             speechConfig = nil
         }
-        speechConfig?.speechSynthesisVoiceName = "en-US-JennyNeural"
+        speechConfig?.speechSynthesisVoiceName = self.voiceName
         
         // SpeechSession helps to play the audio via speaker
         let speechSession = AVAudioSession.sharedInstance()
         try? speechSession.setCategory(.playback, mode: .default, options: [])
         let synthesizer = try! SPXSpeechSynthesizer(speechConfig!)
         // Configure the pitch
-        
-        let result = try! synthesizer.speakText(inputText) // The audio is played from this line
+        let inputSSML = "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='\(self.selectedLanguage ?? "en-US")'> <voice name='\(self.voiceName ?? "en-US-JennyNeural")'> <mstts:express-as style='\(self.speechStyle ?? "chat")'> <prosody pitch='\(self.speechPitch ?? "5%")'> \(inputText) </prosody> </mstts:express-as> </voice></speak>"
+        print(inputSSML)
+        let result = try! synthesizer.speakSsml(inputSSML)
         if result.reason == SPXResultReason.canceled
         {
             let cancellationDetails = try! SPXSpeechSynthesisCancellationDetails(fromCanceledSynthesisResult: result)
