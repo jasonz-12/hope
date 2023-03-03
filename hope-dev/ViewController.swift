@@ -24,12 +24,13 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
     var trailingConstraint: NSLayoutConstraint!
     var audioPlayer: AVAudioPlayer?
     var messages: [[String: Any]] = []
-    var history = ""
+    var history: [[String: String]] = [[:]]
     var chatHistoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("chat_history.txt")
     var selectedLanguage: String!
     var voiceName: String?
     var speechStyle: String?
     var speechPitch: String?
+    var speechRate: String?
     
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var msgTable: UITableView!
@@ -46,13 +47,14 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         print(selectedLanguage)
         if selectedLanguage == "en-US" {
             voiceName = "en-US-JennyNeural"
-            chatPrompt = "Your name is Hope, your MBTI personality is ENTP. You will be friendly, encourgaing, helpful. You will focus on the user's mental well-being. You will respond in the most concise way possible.\n"
+            chatPrompt = "Your name is Hope, your MBTI personality is ENTP. You will be friendly, encourgaing, helpful. You will focus on the user's mental well-being. You will respond in less than 50 words.\n"
         } else if selectedLanguage == "zh-CN" {
             voiceName = "zh-CN-XiaomengNeural"
-            chatPrompt = "你的名字是Hope，你的MBTI人格测试结果是ENTP，你是个北京人。你会非常在意他人的心里感受，并且会站在别人的立场思考。你将会以最精辟的方式来回答。"
+            chatPrompt = "你的名字是Hope，你是个北京人。你会非常在意他人的心里感受，并且会站在别人的立场思考。你将会以最精辟的方式来回答。"
         }
         let speechStyle = "affectionate"
         let speechPitch = "5%"
+        let speechRate = "10%"
         print(selectedLanguage)
         print(voiceName)
         print(speechStyle)
@@ -87,11 +89,11 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         let message = messages[indexPath.row]
         let cell = msgTable.dequeueReusableCell(withIdentifier: "MessageCell", for: indexPath) as! MessageCell
         
-        cell.messageLabel.text = message["text"] as? String
+        cell.messageLabel.text = message["content"] as? String
         cell.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
         
         // Adjust color
-        if message["sender"] as? String == "User" {
+        if message["role"] as? String == "user" {
             cell.messageLabel.textColor =  UIColor.white
             cell.messageBackground.backgroundColor = UIColor.systemBlue
             cell.left_ic_leadingConstraint.isActive = false
@@ -115,12 +117,11 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
     
     // MARK: Send messages
     func sendMessage(sender: String, contents: String) {
-        let timestamp = Date().iso8601
+//        let timestamp = Date().iso8601
         
         let message = [
-            "text": contents,
-            "sender": sender,
-            "timestamp": timestamp
+            "role": sender,
+            "content": contents
         ]
         
         messages.append(message)
@@ -170,19 +171,19 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
 
         let result = try! recognizer.recognizeOnce()
         print("recognition result: \(result.text ?? "(no result)")")
-        self.sendMessage(sender: "User", contents: result.text ?? "(no result)")
+        self.sendMessage(sender: "user", contents: result.text ?? "(no result)")
         print("User message sent.")
 
         // Call OpenAI API to generate Response
         self.getOpenAIResult(from: result.text ?? "") { response in
             if let response = response {
                 print("OpenAI generated response: \(response)")
-                self.sendMessage(sender: "Hope", contents: response)
+                self.sendMessage(sender: "assistant", contents: response)
                 // Stop the recognizer after each recognition
                 try? self.recognizer.stopContinuousRecognition()
             } else {
                 print("Error generating response.")
-                self.sendMessage(sender: "Hope", contents: "Error")
+                self.sendMessage(sender: "assistant", contents: "Error")
             }
         }
     }
@@ -196,7 +197,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         let apiKey = "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"
         
         // Set the API endpoint URL
-        let apiUrl = URL(string: "https://api.openai.com/v1/completions")!
+        let apiUrl = URL(string: "https://api.openai.com/v1/chat/completions")!
         
         // Set the request headers
         var request = URLRequest(url: apiUrl)
@@ -207,15 +208,22 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         do {
             let historyData = try Data(contentsOf: chatHistoryURL)
             let history = try JSONSerialization.jsonObject(with: historyData, options: []) as! [[String: Any]]
-            var historyString = ""
+//            var historyString = ""
+//            for message in history {
+//                if let sender = message["role"] as? String, let content = message["content"] as? String {
+//                    historyString += "\n\(sender): \(content)"
+//                }
+//            }
+            var historyArray: [[String: String]] = [[:]]
             for message in history {
-                if let sender = message["sender"] as? String, let content = message["text"] as? String {
-                    historyString += "\n\(sender): \(content)"
+                if let sender = message["role"] as? String, let content = message["content"] as? String {
+                    historyArray.append(["role": sender, "content": content])
                 }
             }
-            self.history = historyString
-            self.chatPrompt += historyString
-            print("Chat history successfully loaded.")
+            self.history = historyArray.filter { !$0.isEmpty }
+            print("History: \(self.history)")
+//            self.chatPrompt += historyString
+//            print("Chat history successfully loaded.")
         } catch {
             print("Error loading chat history.")
         }
@@ -223,54 +231,69 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         // Set the request body - controll the length of historical input here
         let chatPromptLines = self.chatPrompt.components(separatedBy: "\n")
         let hopeSettings = chatPromptLines[0]
-        let recentLines = Array(chatPromptLines.suffix(5))
-        let recentChatPrompt = ([hopeSettings] + recentLines).joined(separator: "\n")
-        print(recentChatPrompt)
+//        let recentLines = Array(chatPromptLines.suffix(5))
+//        let recentChatPrompt = ([hopeSettings] + recentLines).joined(separator: "\n")
+//        print(recentChatPrompt)
         
         // Set the body for request
         let requestBody: [String: Any] = [
-            "model": "text-davinci-003",
-            "prompt": recentChatPrompt+"\nUser:" + text + "\nHope:",
-            "temperature": 0.9,
+            "model": "gpt-3.5-turbo-0301",
+            "messages": [
+                ["role": "system", "content": self.chatPrompt],
+            ] + self.history + [
+                ["role": "user", "content": text]
+            ],
+            "temperature": 1,
             "max_tokens": 150,
-            "top_p": 1,
-            "frequency_penalty": 0,
-            "presence_penalty": 0.6,
-            "stop": [" User:", " Hope:"]
+            "stop": ["user", "assistant"],
+            "user": "Jason Zhu"
         ]
+        
         let jsonData = try! JSONSerialization.data(withJSONObject: requestBody, options: [])
         request.httpBody = jsonData
         request.httpMethod = "POST"
+        request.timeoutInterval = 30
         
         // Send the API request
-        print("Sending request to OpenAI API...")
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("Error: \(error)")
-                completion(nil)
+                print(response ?? "meh")
+                DispatchQueue.main.async() {
+                    completion(nil)
+                }
+                return
             } else if let data = data {
                 do {
                     print("Response received.")
+                    print(response ?? "meh")
                     // Parse the response JSON
                     let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                    if let choices = json?["choices"] as? [[String: Any]], let text = choices[0]["text"] as? String {
-                        response_text = text
+                    if let choices = json?["choices"] as? [[String: Any]], let message = choices[0]["message"] as? [String: Any], let text = message["content"] as? String {
+                        response_text = text.replacingOccurrences(of: String("Hope: "), with: String(""))
                         // Pass the response to the completion handler
-                        completion(response_text)
+                        DispatchQueue.main.async() {
+                            completion(response_text)
+                        }
                         // Call textToSpeech
                         self.textToSpeech(inputText: response_text)
                     } else {
                         print("Error: response JSON did not contain expected data")
                         print("Response data: \(String(data: data, encoding: .utf8) ?? "")")
-                        completion(nil)
+                        DispatchQueue.main.async() {
+                            completion(nil)
+                        }
                     }
                 } catch let error {
                     print("Error parsing response JSON: \(error)")
                     print("Response data: \(String(data: data, encoding: .utf8) ?? "")")
-                    completion(nil)
+                    DispatchQueue.main.async() {
+                        completion(nil)
+                    }
                 }
             }
         }
+        print("Sending request to OpenAI API...")
         task.resume()
     }
 
@@ -290,7 +313,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         try? speechSession.setCategory(.playback, mode: .default, options: [])
         let synthesizer = try! SPXSpeechSynthesizer(speechConfig!)
         // Configure the pitch
-        let inputSSML = "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='\(self.selectedLanguage ?? "en-US")'> <voice name='\(self.voiceName ?? "en-US-JennyNeural")'> <mstts:express-as style='\(self.speechStyle ?? "chat")'> <prosody pitch='\(self.speechPitch ?? "5%")'> \(inputText) </prosody> </mstts:express-as> </voice></speak>"
+        let inputSSML = "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='\(self.selectedLanguage ?? "en-US")'> <voice name='\(self.voiceName ?? "en-US-JennyNeural")'> <mstts:express-as style='\(self.speechStyle ?? "chat")'> <prosody pitch='\(self.speechPitch ?? "5%")' rate='\(self.speechRate ?? "10%")'> \(inputText) </prosody> </mstts:express-as> </voice></speak>"
         print(inputSSML)
         let result = try! synthesizer.speakSsml(inputSSML)
         if result.reason == SPXResultReason.canceled
