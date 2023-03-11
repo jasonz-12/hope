@@ -90,11 +90,11 @@
                                 <color key="sectionIndexBackgroundColor" systemColor="systemGray4Color"/>
                             </tableView>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tbZ-pL-l2k">
-                                <rect key="frame" x="0.0" y="58" width="393" height="44.000000000007844"/>
+                                <rect key="frame" x="0.0" y="58" width="393" height="44"/>
                                 <navigationBarAppearance key="standardAppearance" backgroundImageContentMode="scaleToFill"/>
                             </navigationBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mbb-Yz-2ag">
-                                <rect key="frame" x="113" y="758" width="166" height="36"/>
+                                <rect key="frame" x="189" y="761" width="128" height="36"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Ask Hope">
                                     <fontDescription key="titleFontDescription" type="system" pointSize="18"/>
@@ -104,27 +104,37 @@
                                 </connections>
                             </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="R0B-93-gSq">
-                                <rect key="frame" x="186" y="769" width="20" height="20"/>
+                                <rect key="frame" x="243" y="769" width="20" height="20"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ON-a3-USH">
+                                <rect key="frame" x="46" y="761" width="85" height="36"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="STOP"/>
+                                <connections>
+                                    <action selector="stopTTS" destination="BYZ-38-t0r" eventType="touchUpInside" id="vnl-fY-DiH"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Mbb-Yz-2ag" secondAttribute="bottom" constant="21" id="0Sp-dC-4ne"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="tbZ-pL-l2k" secondAttribute="bottom" constant="715.99999999999216" id="0f3-MR-Cbb"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="R0B-93-gSq" secondAttribute="bottom" constant="29" id="15F-93-ldI"/>
-                            <constraint firstItem="Mbb-Yz-2ag" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="113" id="5C1-Te-SlJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="tbZ-pL-l2k" secondAttribute="top" constant="45" id="Ea0-f8-201"/>
-                            <constraint firstItem="Mbb-Yz-2ag" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="655" id="HkS-74-iYi"/>
-                            <constraint firstItem="R0B-93-gSq" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="666" id="Kas-PL-FJo"/>
+                            <constraint firstItem="0ON-a3-USH" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="46" id="GgD-qr-52R"/>
+                            <constraint firstItem="R0B-93-gSq" firstAttribute="centerY" secondItem="Mbb-Yz-2ag" secondAttribute="centerY" id="Kfb-IM-pyr"/>
                             <constraint firstItem="tbZ-pL-l2k" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="N6V-fD-09l"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tbZ-pL-l2k" secondAttribute="trailing" id="NgL-Fd-9g7"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="QcU-Tq-kEF" secondAttribute="trailing" constant="5" id="OzP-fJ-5Hd"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Mbb-Yz-2ag" secondAttribute="bottom" constant="24" id="YNz-j5-Sho"/>
-                            <constraint firstItem="R0B-93-gSq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="186" id="ZYN-nq-ua7"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="R0B-93-gSq" secondAttribute="trailing" constant="187" id="b4W-cm-ccC"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Mbb-Yz-2ag" secondAttribute="trailing" constant="114" id="bM6-zN-2A9"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="0ON-a3-USH" secondAttribute="trailing" constant="262" id="PiN-3p-t8Y"/>
+                            <constraint firstItem="R0B-93-gSq" firstAttribute="centerX" secondItem="Mbb-Yz-2ag" secondAttribute="centerX" id="R3w-Pd-kAt"/>
                             <constraint firstItem="QcU-Tq-kEF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="h20-0A-A4A"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="QcU-Tq-kEF" secondAttribute="bottom" constant="104" id="h2i-JF-T04"/>
+                            <constraint firstItem="Mbb-Yz-2ag" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="658" id="jvK-dV-m2h"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="0ON-a3-USH" secondAttribute="bottom" constant="21" id="lg7-Ia-zCw"/>
+                            <constraint firstItem="0ON-a3-USH" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="658" id="niy-ug-djX"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Mbb-Yz-2ag" secondAttribute="trailing" constant="76" id="pJf-L9-2i6"/>
+                            <constraint firstItem="Mbb-Yz-2ag" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="189" id="qWa-bd-TcV"/>
                             <constraint firstItem="QcU-Tq-kEF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="uBO-5R-Daf"/>
                         </constraints>
                     </view>

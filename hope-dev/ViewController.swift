@@ -21,6 +21,9 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
     
     var recognizer: SPXSpeechRecognizer!
     var recognizerIsRunning = false
+
+    var synthesizer: SPXSpeechSynthesizer?
+    var currentSpeechResult: SPXSpeechSynthesisResult?
     
     var fromMicButton: UIButton!
     var sub: String!
@@ -117,10 +120,10 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         print(speechPitch)
         
         // Setup recognizer
-        let speechConfig = try! SPXSpeechConfiguration(subscription: sub, region: region)
-        speechConfig.speechRecognitionLanguage = selectedLanguage
-        let audioConfig = SPXAudioConfiguration()
-        recognizer = try! SPXSpeechRecognizer(speechConfiguration: speechConfig, audioConfiguration: audioConfig)
+        let rec_speechConfig = try! SPXSpeechConfiguration(subscription: sub, region: region)
+        rec_speechConfig.speechRecognitionLanguage = selectedLanguage
+        let rec_audioConfig = SPXAudioConfiguration()
+        recognizer = try! SPXSpeechRecognizer(speechConfiguration: rec_speechConfig, audioConfiguration: rec_audioConfig)
         
         // UI Stuff
         // Message Table View
@@ -138,6 +141,8 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         tokenCounts = 0
     }
     
+    
+    // Other funcs
     func position(for bar: UIBarPositioning) -> UIBarPosition {
         return .topAttached
     }
@@ -269,6 +274,16 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
             }
         }
     
+    // MARK: Stop narration
+    @IBAction func stopTTS() {
+        guard let synthesizer = synthesizer else {
+            print("Synthesizer is nil")
+            return
+        }
+        try! synthesizer.stopSpeaking()
+    }
+
+    
     // MARK: Recognition
     func recognizeFromMic() {
         // Clear the audio session before recognition starts
@@ -292,7 +307,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         // Call OpenAI API to generate Response
         self.getOpenAIResult(from: result.text ?? "") { response in
             if let response = response {
-                print("OpenAI generated response: \(response)")
+//                print("OpenAI generated response: \(response)")
                 self.sendMessage(sender: "assistant", contents: response)
                 // Stop the recognizer after each recognition
                 try? self.recognizer.stopContinuousRecognition()
@@ -425,11 +440,11 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         // SpeechSession helps to play the audio via speaker
         let speechSession = AVAudioSession.sharedInstance()
         try? speechSession.setCategory(.playback, mode: .default, options: [])
-        let synthesizer = try! SPXSpeechSynthesizer(speechConfig!)
+        self.synthesizer = try! SPXSpeechSynthesizer(speechConfig!)
         // Configure the pitch
         let inputSSML = "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='\(self.selectedLanguage ?? "en-US")'> <voice name='\(self.voiceName ?? "en-US-JennyNeural")'> <mstts:express-as style='\(self.speechStyle ?? "affectionate")'> <prosody pitch='\(self.speechPitch ?? "5%")' rate='\(self.speechRate ?? "10%")'> \(inputText) </prosody> </mstts:express-as> </voice></speak>"
         print(inputSSML)
-        let result = try! synthesizer.speakSsml(inputSSML)
+        let result = try! synthesizer!.speakSsml(inputSSML)
         if result.reason == SPXResultReason.canceled
         {
             let cancellationDetails = try! SPXSpeechSynthesisCancellationDetails(fromCanceledSynthesisResult: result)
@@ -457,7 +472,6 @@ extension Date {
 }
 
 class MessageCell: UITableViewCell {
-    
     var right_mb_trailingConstraint: NSLayoutConstraint!
     var right_ic_trailingConstraint: NSLayoutConstraint!
     var left_ic_leadingConstraint: NSLayoutConstraint!
@@ -473,7 +487,6 @@ class MessageCell: UITableViewCell {
         imageView.layer.cornerRadius = 30 // 25
         imageView.contentMode = .scaleAspectFit
         //        imageView.image = icon
-        
         return imageView
     }()
     
