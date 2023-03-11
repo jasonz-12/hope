@@ -9,10 +9,16 @@ import UIKit
 import AVFoundation
 import Speech
 import MicrosoftCognitiveServicesSpeech
+import SQLite3
 
 // MARK: View Controller
 class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningDelegate, UINavigationBarDelegate {
 
+    var db: OpaquePointer?
+    var fileManager = FileManager.default
+    var documentsDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+    var fileURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("hope.sqlite")
+    
     var recognizer: SPXSpeechRecognizer!
     var recognizerIsRunning = false
     
@@ -31,13 +37,63 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
     var speechStyle: String?
     var speechPitch: String?
     var speechRate: String?
+    var tokenCounts: Int?
     
+    // UI connectivity
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var msgTable: UITableView!
     @IBOutlet weak var navBar: UINavigationBar!
+    @IBOutlet weak var recordingActivity: UIActivityIndicatorView!
 
+    // MARK: viewDidLoad()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Inits connection to db
+        if !fileManager.fileExists(atPath: fileURL.path) {
+            if sqlite3_open(fileURL.path, &db) == SQLITE_OK {
+                let createTableQuery = """
+                    CREATE TABLE IF NOT EXISTS chat_history (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        role TEXT,
+                        message TEXT,
+                        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
+                """
+                print("Create table query created.")
+                if sqlite3_exec(db, createTableQuery, nil, nil, nil) != SQLITE_OK {
+                    print("Error creating table")
+                } else {
+                    print("Table creation/link successful.")
+                }
+                sqlite3_close(db)
+                print("db connection closed")
+            } else {
+                print("Error opening database")
+            }
+        } else {
+            if sqlite3_open(fileURL.path, &db) == SQLITE_OK {
+                let createTableQuery = """
+                    CREATE TABLE IF NOT EXISTS chat_history (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        role TEXT,
+                        message TEXT,
+                        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
+                """
+                print("Create table query created.")
+                if sqlite3_exec(db, createTableQuery, nil, nil, nil) != SQLITE_OK {
+                    print("Error creating table")
+                } else {
+                    print("Table creation/link successful.")
+                }
+                sqlite3_close(db)
+                print("db connection closed")
+            } else {
+                print("Error opening database")
+            }
+        }
+        
         // load subscription information
         sub = "289df82ad08e424cbd729c7dd332ddff"
         region = "canadacentral"
@@ -47,16 +103,16 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         print(selectedLanguage)
         if selectedLanguage == "en-US" {
             voiceName = "en-US-JennyNeural"
-            chatPrompt = "Your name is Hope, your MBTI personality is ENTP. You will be friendly, encourgaing, helpful. You will focus on the user's mental well-being. You will respond in less than 50 words.\n"
+            chatPrompt = "Your name is Hope. You will be friendly, encourgaing, helpful. You will focus on the user's mental well-being. You will be used in an audio chatbot program, so please talk as if you are having a face-to-face conversation.\n"
         } else if selectedLanguage == "zh-CN" {
-            voiceName = "zh-CN-XiaomengNeural"
-            chatPrompt = "你的名字是Hope，你是个北京人。你会非常在意他人的心里感受，并且会站在别人的立场思考。你将会以最精辟的方式来回答。"
+            voiceName = "zh-CN-XiaoxiaoNeural"
+            chatPrompt = "你的名字是Hope。你会非常在意他人的心里感受，并且会站在别人的立场思考。你将会以最精辟的方式来回答。你将会被用于一个聊天机器人程序里，所以请用一种聊天的口吻与用户交流。"
         }
-        let speechStyle = "affectionate"
+        let speechStyle = "chat"
         let speechPitch = "5%"
-        let speechRate = "10%"
+        let speechRate = "12%"
         print(selectedLanguage)
-        print(voiceName)
+        print(String(voiceName ?? "en-US-JennyNeural"))
         print(speechStyle)
         print(speechPitch)
         
@@ -75,6 +131,11 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         // Navigation Bar
         navBar.delegate = self
         
+        // Recording Section Stuff
+        recordingActivity.isHidden = true
+        
+        // Initiate token count
+        tokenCounts = 0
     }
     
     func position(for bar: UIBarPositioning) -> UIBarPosition {
@@ -85,6 +146,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         return messages.count
     }
     
+    // MARK: tableView()
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let message = messages[indexPath.row]
         let cell = msgTable.dequeueReusableCell(withIdentifier: "MessageCell", for: indexPath) as! MessageCell
@@ -136,21 +198,74 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
     }
     
     // MARK: Save messages
-    func saveMessages(){
-        // Save the `messages` into a file for session history - locally
+    func saveMessages() {
         do {
-            let data = try JSONSerialization.data(withJSONObject: messages, options: [])
+            // Save the `messages` into a file for session history - locally
+            let data = try JSONSerialization.data(withJSONObject: messages)
             try data.write(to: chatHistoryURL)
+
+            // Open database connection
+            guard sqlite3_open(fileURL.path, &db) == SQLITE_OK else {
+                print("Error opening database connection, chat message won't be saved to db.")
+                return
+            }
+
+            // Prepare the insert statement
+            let insertQuery = "INSERT INTO chat_history (role, message) VALUES (?, ?);"
+            var insertStatement: OpaquePointer?
+            guard sqlite3_prepare_v2(db, insertQuery, -1, &insertStatement, nil) == SQLITE_OK else {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                print("Error preparing insert statement: \(errmsg)")
+                sqlite3_close(db)
+                return
+            }
+
+            // Bind parameters and execute the statement
+            if let message = messages.last,
+               let role = message["role"] as? NSString,
+               let content = message["content"] as? NSString {
+                sqlite3_bind_text(insertStatement, 1, role.utf8String, -1, nil)
+                sqlite3_bind_text(insertStatement, 2, content.utf8String, -1, nil)
+                if sqlite3_step(insertStatement) != SQLITE_DONE {
+                    print("Error inserting row")
+                }
+                sqlite3_finalize(insertStatement)
+                print("Most recent message inserted into chat_history table.")
+            } else {
+                print("Error: message array error.")
+                sqlite3_finalize(insertStatement)
+            }
+
+            // Close database connection
+            sqlite3_close(db)
             print("Messages saved to chatHistory.")
         } catch {
             print("Error while saving messages to chatHistory: \(error)")
         }
     }
+
     
-    // MARK: Actions
+    // MARK: Recording Button Clicked
         @IBAction func fromMicButtonClicked() {
+            let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+            feedbackGenerator.prepare()
+            DispatchQueue.main.async {
+                feedbackGenerator.impactOccurred(intensity: 1.0)
+            }
+           
+            recordingActivity.isHidden = false
+            recordingActivity.startAnimating()
+            recordButton.isEnabled = false
+            recordButton.isHidden = true
+            
             DispatchQueue.global(qos: .userInitiated).async {
                 self.recognizeFromMic()
+                DispatchQueue.main.async{
+                    self.recordingActivity.stopAnimating()
+                    self.recordingActivity.isHidden = true
+//                    self.recordButton.isEnabled = true
+//                    self.recordButton.isHidden = false
+                }
             }
         }
     
@@ -208,12 +323,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         do {
             let historyData = try Data(contentsOf: chatHistoryURL)
             let history = try JSONSerialization.jsonObject(with: historyData, options: []) as! [[String: Any]]
-//            var historyString = ""
-//            for message in history {
-//                if let sender = message["role"] as? String, let content = message["content"] as? String {
-//                    historyString += "\n\(sender): \(content)"
-//                }
-//            }
+
             var historyArray: [[String: String]] = [[:]]
             for message in history {
                 if let sender = message["role"] as? String, let content = message["content"] as? String {
@@ -221,19 +331,17 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
                 }
             }
             self.history = historyArray.filter { !$0.isEmpty }
-            print("History: \(self.history)")
-//            self.chatPrompt += historyString
-//            print("Chat history successfully loaded.")
         } catch {
             print("Error loading chat history.")
         }
         
         // Set the request body - controll the length of historical input here
-        let chatPromptLines = self.chatPrompt.components(separatedBy: "\n")
-        let hopeSettings = chatPromptLines[0]
-//        let recentLines = Array(chatPromptLines.suffix(5))
-//        let recentChatPrompt = ([hopeSettings] + recentLines).joined(separator: "\n")
-//        print(recentChatPrompt)
+        if Int(self.tokenCounts ?? 1) > 3500 {
+            self.history = Array(self.history.suffix(10))
+            print("Current token count: \(Int(self.tokenCounts ?? 1))")
+        } else {
+            print("Current token count: \(Int(self.tokenCounts ?? 1))")
+        }
         
         // Set the body for request
         let requestBody: [String: Any] = [
@@ -244,8 +352,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
                 ["role": "user", "content": text]
             ],
             "temperature": 1,
-            "max_tokens": 150,
-            "stop": ["user", "assistant"],
+            "max_tokens": 100,
             "user": "Jason Zhu"
         ]
         
@@ -269,9 +376,12 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
                     print(response ?? "meh")
                     // Parse the response JSON
                     let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                    if let choices = json?["choices"] as? [[String: Any]], let message = choices[0]["message"] as? [String: Any], let text = message["content"] as? String {
+                    print(json)
+                    if let usage = json?["usage"] as? [String: Int], let choices = json?["choices"] as? [[String: Any]], let message = choices[0]["message"] as? [String: Any], let text = message["content"] as? String {
                         response_text = text.replacingOccurrences(of: String("Hope: "), with: String(""))
-                        // Pass the response to the completion handler
+//                        print(Int(usage["total_tokens"] ?? 0))
+                        self.tokenCounts = Int(usage["total_tokens"] ?? 0)
+                        // Pass the response to the completi0on handler
                         DispatchQueue.main.async() {
                             completion(response_text)
                         }
@@ -299,6 +409,10 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
 
     // Then, perform a text-to-speech
     func textToSpeech(inputText: String) {
+//        DispatchQueue.main.async {
+//            self.recordButton.isEnabled = false
+//            self.recordButton.isHidden = true
+//        }
         var speechConfig: SPXSpeechConfiguration?
         do {
             try speechConfig = SPXSpeechConfiguration(subscription: sub, region: region)
@@ -313,7 +427,7 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
         try? speechSession.setCategory(.playback, mode: .default, options: [])
         let synthesizer = try! SPXSpeechSynthesizer(speechConfig!)
         // Configure the pitch
-        let inputSSML = "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='\(self.selectedLanguage ?? "en-US")'> <voice name='\(self.voiceName ?? "en-US-JennyNeural")'> <mstts:express-as style='\(self.speechStyle ?? "chat")'> <prosody pitch='\(self.speechPitch ?? "5%")' rate='\(self.speechRate ?? "10%")'> \(inputText) </prosody> </mstts:express-as> </voice></speak>"
+        let inputSSML = "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='\(self.selectedLanguage ?? "en-US")'> <voice name='\(self.voiceName ?? "en-US-JennyNeural")'> <mstts:express-as style='\(self.speechStyle ?? "affectionate")'> <prosody pitch='\(self.speechPitch ?? "5%")' rate='\(self.speechRate ?? "10%")'> \(inputText) </prosody> </mstts:express-as> </voice></speak>"
         print(inputSSML)
         let result = try! synthesizer.speakSsml(inputSSML)
         if result.reason == SPXResultReason.canceled
@@ -322,6 +436,13 @@ class ViewController: UIViewController, UITableViewDataSource, UIBarPositioningD
             print("Canceleled, error code: \(cancellationDetails.errorCode) detail: \(cancellationDetails.errorDetails!) ")
             return
         }
+        DispatchQueue.main.async {
+            self.recordButton.isEnabled = true
+            self.recordButton.isHidden = false
+        }
+        // Shut down db connection after speech
+        sqlite3_close(db)
+        print("Database connection closed.")
     }
 }
 
