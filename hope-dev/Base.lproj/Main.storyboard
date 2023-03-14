@@ -143,6 +143,7 @@
                         <outlet property="navBar" destination="tbZ-pL-l2k" id="Je4-tD-dsx"/>
                         <outlet property="recordButton" destination="Mbb-Yz-2ag" id="r9v-il-W6O"/>
                         <outlet property="recordingActivity" destination="R0B-93-gSq" id="19I-lW-2RC"/>
+                        <outlet property="stopButton" destination="0ON-a3-USH" id="Zgj-lW-u5s"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
